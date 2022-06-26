@@ -7,6 +7,8 @@ import 'package:http/http.dart';
 import '../../homepage/home.dart';
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 //
 
 class body_form extends StatefulWidget {
@@ -163,6 +165,28 @@ class _body_formState extends State<body_form> {
 
   Future<void> login() async {
     if (passControleler.text.isNotEmpty && msgController.text.isNotEmpty) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final info = await deviceInfo.deviceInfo;
+
+      if (kIsWeb) {
+        print("web");
+      } else if (Platform.isAndroid) {
+        AndroidDeviceInfo info = await deviceInfo.androidInfo;
+        print(info.toMap());
+      } else if (Platform.isIOS) {
+        IosDeviceInfo info = await deviceInfo.iosInfo;
+        print(info.toMap());
+      } else if (Platform.isLinux) {
+        LinuxDeviceInfo info = await deviceInfo.linuxInfo;
+        print(info.toMap());
+      } else if (Platform.isMacOS) {
+        MacOsDeviceInfo info = await deviceInfo.macOsInfo;
+        print(info.toMap());
+      } else if (Platform.isWindows) {
+        WindowsDeviceInfo info = await deviceInfo.windowsInfo;
+        print(info.toMap());
+      }
+
       Response response = await http.put(
         Uri.parse(
           "https://app.recruitis.io/api2/login",
